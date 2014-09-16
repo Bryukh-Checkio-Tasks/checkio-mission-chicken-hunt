@@ -25,6 +25,7 @@
 
 <p>
     You are given an yard map as a sequence of strings where:<br>
+    - "." is an empty cell;<br>
     - "I" is managed hobbit;<br>
     - "S" is companion;<br>
     - "C" is chicken (our target);<br>
@@ -54,40 +55,55 @@
     You should move a hobbit in the chicken square, but only one (two hobbits and the chicken in one cell is a collision).
     And you have no more 100 moves.
 </p>
-
-<p style="text-align: center;">
-    <img class="for_info_only" title="example" src="{{MEDIA}}example.png" alt="example" width="392px"/>
-    <img class="for_editor_only" title="example" src="{{MEDIA}}example.png" alt="example" width="380px"/>
+<p>
+    This is a "multicall" mission and your function will be called until you win or lose.
+    Each cycle of steps is running in the new environment, so you can use global variables between steps,
+    but for the new "hunt" they will be reseted.
 </p>
 
-<p><i>( Explain input and output values )</i></p>
+<div>
+    <img title="example" src="{{MEDIA}}map.svg" alt="map" style="float: left"/>
+    <p>This map will be looked little different for each function call:</p>
+    <pre>
+ First       Second
+"......",   "......",
+".I.XX.",   ".S.XX.",
+"...CX.",   "...CX.",
+".XX.X.",   ".XX.X.",
+"...S..",   "...I..",
+"......",   "......",
+
+    </pre>
+</div>
+
 <p>
-    <strong>Input: </strong> Two arguments. Both are int
+    <strong>Input: </strong> A yard map as a tuple of strings. Your function is called twice for each step.
 </p>
 
 <p>
-    <strong>Output: </strong> Int.
+    <strong>Output: </strong> The action as a string. One of ("N", "S", "W", "E", "NW", "NE", "SW", "SE", "S").
 </p>
 
 
 <div class="for_info_only">
-    <p><i>( Put some usage examples )</i></p>
-
     <p>
         <strong>Example:</strong>
     </p>
     <pre class="brush: python">
-checkio(3, 2) == 5
-checkio(5, 7) == 12
+hunt(("......",
+      ".I.XX.",
+      "...CX.",
+      ".XX.X.",
+      "...S..",
+      "......")) # return an action
     </pre>
 </div>
 
 <p class="for_info_only">
     <strong>How it is used: </strong>
-    <i>(Here you can explain how it can be used in development and what is usage of this.)</i>
+
 </p>
 
 <p>
     <strong>Precondition:</strong>
-    <i>Constraints for Input</i>
 </p>
