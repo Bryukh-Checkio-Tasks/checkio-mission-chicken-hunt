@@ -1,9 +1,58 @@
+<div class="story">
+    <p>
+        "It is plain indeed that in spite of later estrangement Hobbits are relatives of ours: far nearer to us than
+        Elves, or even than Dwarves. Of old they spoke the languages of Men, after their own fashion, and liked and
+        disliked much the same things as Men did. But what exactly our relationship is can no longer be discovered."
+
+    </p>
+
+    <p>
+        "Hobbits are an unobtrusive but very ancient people, more numerous formerly than they are today; for they love
+        peace and quiet and good tilled earth: a well-ordered and well-farmed countryside was their favourite haunt."
+    </p>
+    -- "The Lord of the Rings" J.R.R.Tolkien
+</div>
+
 <p>
-    <i>( Describe task in general )</i>
+    Two hobbits are trying to catch a chicken in the yard.
+    Easy task, but these two neighbours can not arrange in any question.
+    And now they need to catch the chicken, but they don't talk each other.
+    So we need to find an algorithm which will work for the both hobbits independently,
+    allow to catch a chicken (by any hobbit) and they will not struck to fence, three or each other.
+    And one more - Hobbits can not run or wait forever
+    (Chicken catch is important of course, but dinner and ale by schedule).
 </p>
 
 <p>
-    Sum two passed ints
+    You are given an yard map as a sequence of strings where:<br>
+    - "I" is managed hobbit;<br>
+    - "S" is companion;<br>
+    - "C" is chicken (our target);<br>
+    - "X" is obstacle (a tree, a rock etc)<br>
+    <br>
+    The yard is rounded by fence.
+</p>
+<p>
+    A chicken and hobbits can move in 8 direction to neighbour cells (including diagonals).
+    The Chicken is running always, but Hobbits can wait and stay.
+    Actions are described by next strings:<br>
+    - "N" north, "S" south, "W" west, "E" east;<br>
+    - "NW" north-west, "NE" north-east, "SW" south-west, "SE" south-east;<br>
+    - "" (empty string) is to wait.
+</p>
+
+<p>
+    The Chicken is unpredictable and can use various tactics (even random moving), but he can not go out of the yard.
+    Hobbits can not run in obstacles or in fences. And they should not struck each other,
+    even for the final jump by the chicken.
+</p>
+
+<p>
+    And tricky part. Your function will be called twice in each step - for the first and the second hobbit.
+    Then the chicken do a move. Hobbits can not communicate each other and make a move simultaneously.
+    So be careful with moving the both hobbits in one square.
+    You should move a hobbit in the chicken square, but only one (two hobbits and the chicken in one cell is a collision).
+    And you have no more 100 moves.
 </p>
 
 <p style="text-align: center;">
@@ -17,13 +66,13 @@
 </p>
 
 <p>
-    <strong>Output: </strong> Int. 
+    <strong>Output: </strong> Int.
 </p>
-
 
 
 <div class="for_info_only">
     <p><i>( Put some usage examples )</i></p>
+
     <p>
         <strong>Example:</strong>
     </p>
