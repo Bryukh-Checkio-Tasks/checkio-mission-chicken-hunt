@@ -1,47 +1,126 @@
-"""
-CheckiOReferee is a base referee for checking you code.
-    arguments:
-        tests -- the dict contains tests in the specific structure.
-            You can find an example in tests.py.
-        cover_code -- is a wrapper for the user function and additional operations before give data
-            in the user function. You can use some predefined codes from checkio.referee.cover_codes
-        checker -- is replacement for the default checking of an user function result. If given, then
-            instead simple "==" will be using the checker function which return tuple with result
-            (false or true) and some additional info (some message).
-            You can use some predefined codes from checkio.referee.checkers
-        add_allowed_modules -- additional module which will be allowed for your task.
-        add_close_builtins -- some closed builtin words, as example, if you want, you can close "eval"
-        remove_allowed_modules -- close standard library modules, as example "math"
-
-checkio.referee.checkers
-    checkers.float_comparison -- Checking function fabric for check result with float numbers.
-        Syntax: checkers.float_comparison(digits) -- where "digits" is a quantity of significant
-            digits after coma.
-
-checkio.referee.cover_codes
-    cover_codes.unwrap_args -- Your "input" from test can be given as a list. if you want unwrap this
-        before user function calling, then using this function. For example: if your test's input
-        is [2, 2] and you use this cover_code, then user function will be called as checkio(2, 2)
-    cover_codes.unwrap_kwargs -- the same as unwrap_kwargs, but unwrap dict.
-
-"""
-
+from random import choice
 from checkio.signals import ON_CONNECT
 from checkio import api
 from checkio.referees.io import CheckiOReferee
 from checkio.referees import cover_codes
 from checkio.referees import checkers
+from multicall_sim import CheckioRefereeMultiSeveral
 
 from tests import TESTS
 
+line = lambda: print("=============================")
+
+DIRS = {
+    "N": (-1, 0),
+    "S": (1, 0),
+    "E": (0, 1),
+    "W": (0, -1),
+    "NW": (-1, -1),
+    "NE": (-1, 1),
+    "SE": (1, 1),
+    "SW": (1, -1),
+    "": (0, 0),
+}
+
+
+def random_chicken(_, possible):
+    return choice(possible)
+
+
+CHICKEN_ALGORITHM = {
+    "random": random_chicken
+}
+
+ERROR_TYPE = "Your function must return a direction as a string."
+ERROR_FENCE = "A hobbit struck in the fence."
+ERROR_TREE = "A hobbit struck in an obstacle."
+ERROR_HOBBITS = "The Hobbits struck each other."
+ERROR_TIRED = "The Hobbits are tired."
+
+N = 2
+
+MAX_STEP = 100
+
+
+def find_position(yard, symb):
+    for i, row in enumerate(yard):
+        for j, ch in enumerate(yard):
+            if ch == symb:
+                return i, j
+    return None, None
+
+
+def find_free(yard, position):
+    x, y = position
+    result = []
+    for k, (dx, dy) in DIRS.items():
+        nx, ny = x + dx, y + dy
+        if 0 < nx < len(yard[0]) and 0 < ny < len(yard) and yard[nx][ny] == ".":
+            result.append((k, (nx, ny)))
+    return result
+
+
+def initial(data):
+    yard1 = [row.replace("1", "I").replace("2", "S") for row in data]
+    yard2 = [row.replace("1", "S").replace("2", "I") for row in data]
+    return {"input": data, "input0": yard1, "input1": yard2}
+
+
+def process(data):
+    yard = data["input"]
+    results = data["recent_results"]
+    chicken_algorithm = CHICKEN_ALGORITHM.get(data.get("chicken", "random"))
+    if any(not isinstance(r, str) or r not in DIRS.keys() for r in results):
+        data.update({"result": False, "is_win": False, "message": ERROR_TYPE})
+        return data
+    chicken = find_position(yard, "C")
+    possibles = find_free(yard, chicken)
+    chicken_action, new_chicken = chicken_algorithm(yard, possibles)
+    data.update({"chicken": new_chicken, "chicken_action": chicken_action})
+    positions = [find_position(yard, str(i + 1)) for i in range(N)]
+    new_positions = []
+    for i, (x, y) in enumerate(positions):
+        nx, ny = x + DIRS[results[i]][0], y + DIRS[results[i]][1]
+        if nx < 0 or nx >= len(yard[0]) or ny < 0 or ny >= len(yard):
+            data.update({"result": False, "is_win": False, "message": ERROR_FENCE})
+            return data
+        if yard[nx][ny] == "X":
+            data.update({"result": False, "is_win": False, "message": ERROR_TREE})
+            return data
+        new_positions.append((nx, ny))
+    if len(set(new_positions)) != len(new_positions):
+        data.update({"result": False, "is_win": False, "message": ERROR_HOBBITS})
+        return data
+
+    if any(new_chicken == pos for pos in new_positions):
+        data.update({"result": True, "is_win": True, "message": "Gratz!"})
+        return data
+
+    if data["step"] >= MAX_STEP:
+        data.update({"result": False, "is_win": False, "message": ERROR_TIRED})
+        return data
+
+    new_yard = [[ch if ch in ".X" else "." for ch in row] for row in yard]
+    for i, (x, y) in enumerate(new_positions):
+        new_yard[x][y] = str(i + 1)
+    new_yard[new_chicken[0]][new_chicken[1]] = "C"
+    data["input"] = tuple("".join(row) for row in new_yard)
+    data["input0"] = [row.replace("1", "I").replace("2", "S") for row in data["input"]]
+    data["input1"] = [row.replace("1", "S").replace("2", "I") for row in data["input"]]
+
+    data.update({"result": True, "is_win": False, "message": "Next"})
+    return data
+
+
 api.add_listener(
     ON_CONNECT,
-    CheckiOReferee(
+    CheckioRefereeMultiSeveral(
         tests=TESTS,
-        cover_code={
-            'python-27': cover_codes.unwrap_args,  # or None
-            'python-3': cover_codes.unwrap_args
-        },
+        quantity=2,
+        function_name="hunt",
+        initial_referee=initial,
+        process_referee=process,
+        is_win_referee=None
         # checker=None,  # checkers.float.comparison(2)
         # add_allowed_modules=[],
         # add_close_builtins=[],
