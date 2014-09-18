@@ -80,6 +80,9 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
 
                 //if you need additional info from tests (if exists)
                 var explanation = data.ext["explanation"];
+
+                setTimeout(function() {svg.moving(data.ext)}, 200);
+
                 $content.find('.output').html('&nbsp;Your results:&nbsp;' + userResults);
                 if (!result) {
                     $content.find('.answer').html(result_addon);
@@ -154,8 +157,9 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
             var attrObst = {"stroke": colorBlue4, "fill": colorBlue4, "font-family": "Roboto", "font-size": cell * 1.3};
 
 
-            var hobbits = [];
+            var hobbits;
             var chicken;
+            var obstacles;
 
             Raphael.fn.star = function (x, y, outR, inR) {
                 var path = "M" + x + "," + (y - outR);
@@ -183,9 +187,13 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
                 sizeY = data.length * cell + 2 * p;
                 paper = Raphael(dom, sizeX, sizeY);
 
+                obstacles = paper.set();
+                hobbits = paper.set();
+                var grid = paper.set();
+
                 for (var row = 0; row < data.length; row++) {
                     for (var col = 0; col < data[row].length; col++) {
-                        paper.rect(p + cell * col, p + cell * row, cell, cell).attr(attrCell);
+                        grid.push(paper.rect(p + cell * col, p + cell * row, cell, cell).attr(attrCell));
                         var ch = data[row][col];
                         if (ch == "C") {
                             chicken = paper.star(
@@ -209,13 +217,51 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
 
                         }
                         if (ch == "X") {
-                            paper.text(p + cell * (col + 0.5),
-                                p + cell * (row + 0.65), "*").attr(attrObst)
+                            obstacles.push(paper.text(p + cell * (col + 0.5),
+                                p + cell * (row + 0.65), "*").attr(attrObst));
                         }
                     }
                 }
 
+                grid.toBack();
+                chicken.toFront();
+                hobbits.toFront();
+                obstacles.toFront();
 
+                paper.rect(p, p, sizeX - 2 * p, sizeY - 2 * p).attr({"stroke": colorBlue4, "stroke-width": 4})
+
+
+            };
+
+            var good_steps = ["N", "S", "W", "E", "NW", "NE", "SW", "SE", ""];
+
+            var dirs = {
+                "N": [0, -cell],
+                "S": [0, cell],
+                "E": [cell, 0],
+                "W": [-cell, 0],
+                "NW": [-cell, -cell],
+                "NE": [cell, -cell],
+                "SE": [cell, cell],
+                "SW": [-cell, cell],
+                "": [0, 0]};
+
+            var stepTime = 300;
+
+            this.moving = function (data) {
+                var moves = data["recent_results"];
+                for (var i = 0; i < moves.length; i++) {
+                    var m = moves[i];
+                    if (typeof(m) != "string" || good_steps.indexOf(m) === -1) {
+                        continue;
+                    }
+                    var h = hobbits[i];
+                    h.animate({"transform": "t" + dirs[m][0] + "," + dirs[m][1]}, stepTime);
+                }
+                var chicken_move = data["chicken_action"];
+                if (chicken_move !== undefined) {
+                    chicken.animate({"transform": "t" + dirs[chicken_move][0] + "," + dirs[chicken_move][1]}, stepTime);
+                }
             }
         }
 
@@ -226,4 +272,6 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
 
 
     }
-);
+
+)
+;

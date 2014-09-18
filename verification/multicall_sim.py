@@ -52,6 +52,7 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         self.test_current_step()
 
     def test_current_step(self, data=None):
+        input_name = "input" + str(self.run_count)
         if self.run_count:
 
             self.referee_data["recent_results"].append(data["result"])
@@ -67,15 +68,15 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         self.referee_data["step"] = self.current_step
         if not self.run_count:
             api.request_write_in(self.referee_data["input"], REQ)
-        api.execute_function(input_data=self.referee_data["input" + str(self.run_count)],
+        api.execute_function(input_data=self.referee_data[input_name],
                              callback=callback,
                              errback=self.fail_cur_step,
                              func=self.function_name,
                              prefix=REQ + str(self.run_count))
 
     def check_current_test(self, data):
-        self.referee_data["recent_results"].append(data["result"])
 
+        self.referee_data["recent_results"].append(data["result"])
         self.referee_data = self.process_referee(self.referee_data)
 
         referee_result = self.referee_data.get("result", False)

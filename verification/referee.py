@@ -58,7 +58,7 @@ def find_free(yard, position):
     result = []
     for k, (dx, dy) in DIRS.items():
         nx, ny = x + dx, y + dy
-        if 0 < nx < len(yard[0]) and 0 < ny < len(yard) and yard[nx][ny] == ".":
+        if 0 <= nx < len(yard[0]) and 0 <= ny < len(yard) and yard[nx][ny] == ".":
             result.append((k, (nx, ny)))
     return result
 
@@ -81,7 +81,7 @@ def process(data):
     results = data["recent_results"]
     chicken_algorithm = CHICKEN_ALGORITHM.get(data.get("chicken_algorithm", "random"))
     line()
-    print(chicken_algorithm)
+    print(results)
     if any(not isinstance(r, str) or r not in DIRS.keys() for r in results):
         data.update({"result": False, "is_win": False, "message": ERROR_TYPE})
         return data
