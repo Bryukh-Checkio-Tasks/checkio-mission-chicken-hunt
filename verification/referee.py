@@ -1,3 +1,4 @@
+import ipdb
 from random import choice
 from checkio.signals import ON_CONNECT
 from checkio import api
@@ -43,8 +44,10 @@ MAX_STEP = 100
 
 
 def find_position(yard, symb):
+    # ipdb.set_trace()
+
     for i, row in enumerate(yard):
-        for j, ch in enumerate(yard):
+        for j, ch in enumerate(row):
             if ch == symb:
                 return i, j
     return None, None
@@ -66,10 +69,19 @@ def initial(data):
     return {"input": data, "input0": yard1, "input1": yard2}
 
 
+def print_map(m):
+    print()
+    for row in m:
+        print(row)
+    print()
+
 def process(data):
     yard = data["input"]
+    print_map(yard)
     results = data["recent_results"]
-    chicken_algorithm = CHICKEN_ALGORITHM.get(data.get("chicken", "random"))
+    chicken_algorithm = CHICKEN_ALGORITHM.get(data.get("chicken_algorithm", "random"))
+    line()
+    print(chicken_algorithm)
     if any(not isinstance(r, str) or r not in DIRS.keys() for r in results):
         data.update({"result": False, "is_win": False, "message": ERROR_TYPE})
         return data
