@@ -1,4 +1,3 @@
-import ipdb
 from random import choice
 from checkio.signals import ON_CONNECT
 from checkio import api
