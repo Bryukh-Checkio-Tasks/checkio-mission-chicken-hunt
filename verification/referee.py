@@ -9,7 +9,6 @@ from multicall_sim import CheckioRefereeMultiSeveral
 
 from tests import TESTS
 
-line = lambda: print("=============================")
 
 DIRS = {
     "N": (-1, 0),
@@ -68,20 +67,10 @@ def initial(data):
     yard2 = [row.replace("1", "S").replace("2", "I") for row in data]
     return {"input": data, "input0": yard1, "input1": yard2}
 
-
-def print_map(m):
-    print()
-    for row in m:
-        print(row)
-    print()
-
 def process(data):
     yard = data["input"]
-    print_map(yard)
     results = data["recent_results"]
     chicken_algorithm = CHICKEN_ALGORITHM.get(data.get("chicken_algorithm", "random"))
-    line()
-    print(results)
     if any(not isinstance(r, str) or r not in DIRS.keys() for r in results):
         data.update({"result": False, "is_win": False, "message": ERROR_TYPE})
         return data
@@ -124,6 +113,16 @@ def process(data):
     return data
 
 
+cover3 = """def cover(f, data):
+    return f(tuple(data))
+"""
+
+cover2 = """def cover(f, data):
+    return f(tuple(str(row) for row in data))
+"""
+
+
+
 api.add_listener(
     ON_CONNECT,
     CheckioRefereeMultiSeveral(
@@ -132,7 +131,11 @@ api.add_listener(
         function_name="hunt",
         initial_referee=initial,
         process_referee=process,
-        is_win_referee=None
+        is_win_referee=None,
+        cover_code={
+            'python-27': cover2,
+            'python-3': cover3
+        },
         # checker=None,  # checkers.float.comparison(2)
         # add_allowed_modules=[],
         # add_close_builtins=[],

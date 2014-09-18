@@ -42,8 +42,24 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
             //YOUR FUNCTION NAME
             var fname = 'hunt';
 
-            var checkioInput = data.in;
-            var checkioInputStr = fname + '(' + JSON.stringify(checkioInput) + ')';
+            var checkioInput = data.in || [
+                "......",
+                ".1.XX.",
+                "...CX.",
+                ".XX.X.",
+                "...2..",
+                "......"];
+            var checkioInputStr = "";
+            for (var h = 1; h < 3; h ++) {
+                checkioInputStr += fname + '(' + JSON.stringify(checkioInput[0]);
+                for (var j = 1; j < checkioInput.length; j++) {
+                    checkioInputStr += ",<br>     " +
+                        JSON.stringify(checkioInput[j]).replace(String(h), "I").replace(String(3 - h), "S");
+                }
+                checkioInputStr += ")<br>";
+
+
+            }
 
             var failError = function (dError) {
                 $content.find('.call').html(checkioInputStr);
@@ -81,7 +97,9 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
                 //if you need additional info from tests (if exists)
                 var explanation = data.ext["explanation"];
 
-                setTimeout(function() {svg.moving(data.ext)}, 200);
+                setTimeout(function () {
+                    svg.moving(data.ext)
+                }, 200);
 
                 $content.find('.output').html('&nbsp;Your results:&nbsp;' + userResults);
                 if (!result) {
