@@ -15,4 +15,4 @@ DIRS = {
 
 
 def hunt(yard):
-    return choice(DIRS.keys())
+    return choice(list(DIRS.keys()))
