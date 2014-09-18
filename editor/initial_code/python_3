@@ -1,11 +1,18 @@
-def checkio(a, b):
-    """
-        sums two passed arguments
-    """
-    return None
+from random import choice
 
-if __name__ == '__main__':
-    #These "asserts" using only for self-checking and not necessary for auto-testing
-    assert checkio(3, 2) == 5
-    assert checkio(5, 7) == 12
-    print('Done')
+
+DIRS = {
+    "N": (-1, 0),
+    "S": (1, 0),
+    "E": (0, 1),
+    "W": (0, -1),
+    "NW": (-1, -1),
+    "NE": (-1, 1),
+    "SE": (1, 1),
+    "SW": (1, -1),
+    "": (0, 0),
+}
+
+
+def hunt(yard):
+    return choice(DIRS.keys())
