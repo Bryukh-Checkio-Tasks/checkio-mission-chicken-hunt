@@ -40,7 +40,7 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
                          add_close_builtins=self.add_close_builtins,
                          add_allowed_modules=self.add_allowed_modules,
                          remove_allowed_modules=self.remove_allowed_modules,
-                         write_execute_data=True,
+                         write_execute_data=False,
                          cover_code=self.cover_code.get(self.runner))
 
     def run_success(self, data):
@@ -65,6 +65,8 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
             self.run_count += 1
             callback = self.test_current_step
         self.referee_data["step"] = self.current_step
+        if not self.run_count:
+            api.request_write_in(self.referee_data["input"], REQ)
         api.execute_function(input_data=self.referee_data["input" + str(self.run_count)],
                              callback=callback,
                              errback=self.fail_cur_step,
