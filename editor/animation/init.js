@@ -1,5 +1,5 @@
 //Dont change it
-requirejs(['ext_editor_1', 'jquery_190', 'raphael_210', 'snap.svg_030'],
+requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
     function (ext, $, Raphael, Snap) {
 
         var cur_slide = {};
