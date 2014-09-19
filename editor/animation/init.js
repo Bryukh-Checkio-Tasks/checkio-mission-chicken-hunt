@@ -49,6 +49,7 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
                 ".XX.X.",
                 "...2..",
                 "......"];
+            console.log(data.in);
             var checkioInputStr = "";
             for (var h = 1; h < 3; h++) {
                 checkioInputStr += fname + '(' + JSON.stringify(checkioInput[0]);
