@@ -1,70 +1,77 @@
 <div class="story">
     <p>
-        "It is plain indeed that in spite of later estrangement Hobbits are relatives of ours: far nearer to us than
-        Elves, or even than Dwarves. Of old they spoke the languages of Men, after their own fashion, and liked and
-        disliked much the same things as Men did. But what exactly our relationship is can no longer be discovered."
+        "It is plain indeed that in spite of later estrangement Hobbits are relatives of ours: far
+        nearer to us than
+        Elves, or even than Dwarves. Of old they spoke the languages of Men, after their own
+        fashion, and liked and
+        disliked much the same things as Men did. But what exactly our relationship is can no longer
+        be discovered."
 
     </p>
 
     <p>
-        "Hobbits are an unobtrusive but very ancient people, more numerous formerly than they are today; for they love
-        peace and quiet and good tilled earth: a well-ordered and well-farmed countryside was their favourite haunt."
+        "Hobbits are an unobtrusive but very ancient people, more numerous formerly than they are
+        today; for they love
+        peace and quiet and good tilled earth: a well-ordered and well-farmed countryside was their
+        favourite haunt."
     </p>
     -- "The Lord of the Rings" J.R.R.Tolkien
 </div>
 
 <p>
-    Two hobbits are trying to catch a chicken in the yard.
-    Easy task, but these two neighbours can not arrange in any question.
-    And now they need to catch the chicken, but they don't talk each other.
-    So we need to find an algorithm which will work for the both hobbits independently,
-    allow to catch a chicken (by any hobbit) and they will not struck to fence, three or each other.
-    And one more - Hobbits can not run or wait forever
-    (Chicken catch is important of course, but dinner and ale by schedule).
+    Two Hobbits are trying to catch a chicken in the yard. It should be an easy task, but these two
+    neighbours never seem to get along. Now a chicken got loose and they need to catch it, but they
+    refuse to talk to each other. So, we need to find an algorithm which will work for the both of
+    the Hobbits independently, allowing either of them to catch a chicken without walking into a
+    fence, tree or each other. One last thing, Hobbits cannot run or wait forever. After all.
+    catching the chicken is important, but Hobbits must adhere to their strict dinner schedule.
 </p>
 
 <p>
-    You are given an yard map as a sequence of strings where:<br>
+    You are given a yard map as a sequence of strings where:<br>
     - "." is an empty cell;<br>
-    - "I" is managed hobbit;<br>
+    - "I" is managed Рobbit;<br>
     - "S" is companion;<br>
     - "C" is chicken (our target);<br>
     - "X" is obstacle (a tree, a rock etc)<br>
     <br>
-    The yard is rounded by fence.
+    The yard is surrounded by a fence.
+
 </p>
 <p>
-    A chicken and hobbits can move in 8 direction to neighbour cells (including diagonals).
-    The Chicken is running always, but Hobbits can wait and stay.
-    Actions are described by next strings:<br>
+    The chicken and Hobbits can move in 8 direction into neighbouring cells (including diagonals).
+    The Chicken never stops running, but the Hobbits can wait and stay in one place for a while.
+    Actions are described with the following strings:<br>
     - "N" north, "S" south, "W" west, "E" east;<br>
     - "NW" north-west, "NE" north-east, "SW" south-west, "SE" south-east;<br>
     - "" (empty string) is to wait.
 </p>
 
 <p>
-    The Chicken is unpredictable and can use various tactics (even random moving), but he can not go out of the yard.
-    Hobbits can not run in obstacles or in fences. And they should not struck each other,
-    even for the final jump by the chicken.
+    The Chicken is unpredictable and can use various tactics (including random movement), but he can
+    not go out of the yard. Hobbits can not run in obstacles or in fences. And they should not
+    struck each other, even for the final jump by the chicken.
 </p>
 
 <p>
-    And tricky part. Your function will be called twice in each step - for the first and the second hobbit.
-    Then the chicken do a move. Hobbits can not communicate each other and make a move simultaneously.
-    So be careful with moving the both hobbits in one square.
-    You should move a hobbit in the chicken square, but only one (two hobbits and the chicken in one cell is a collision).
-    The Hobbits and the chicken move simultaneously.
-    So if you just jump to a cell where is chicken, then is not guaranted what you will catch it.
-    And you have no more 100 moves.
+    Now for the tricky part. Your function will be called twice in each step - once for the first
+    Hobbit and once for the second Hobbit. The Hobbits cannot communicate with each other and make
+    their moves simultaneously. So be careful with moving both Hobbits into one square. You should
+    move a Hobbit into the chickens square to win, but only one should make the move as two hobbits
+    entering the same cell would count as them colliding. The Hobbits and the chicken move
+    simultaneously, so if you just jump to a cell where is chicken, then is not guaranteed that you
+    will catch it. Since dinner time is coming soon for the Hobbits, you have no more 100 moves to
+    catch the chicken.
 </p>
 <p>
-    This is a "multicall" mission and your function will be called until you win or lose.
-    Each cycle of steps is running in the new environment, so you can use global variables between steps,
-    but for the new "hunt" they will be reseted.
+    This is a "multicall" mission and your function will be called until you win or lose. Each cycle
+    of steps is running in a new environment, so you can use global variables between steps, but for
+    the new "hunt" they will be reseted..
 </p>
 
 <div>
     <img title="example" src="{{MEDIA}}map.svg" alt="map" style="float: left"/>
+
     <p>This map will be looked little different for each function call:</p>
     <pre>
  First       Second
@@ -80,11 +87,13 @@
 </div>
 
 <p>
-    <strong>Input: </strong> A yard map as a tuple of strings. Your function is called twice for each step.
+    <strong>Input: </strong> A yard map as a tuple of strings. Your function is called twice for
+    each step.
 </p>
 
 <p>
-    <strong>Output: </strong> The action as a string. One of ("N", "S", "W", "E", "NW", "NE", "SW", "SE", "S").
+    <strong>Output: </strong> The action as a string. One of ("N", "S", "W", "E", "NW", "NE", "SW",
+    "SE", "S").
 </p>
 
 
@@ -104,8 +113,9 @@ hunt(("......",
 
 <p class="for_info_only">
     <strong>How it is used: </strong>
-    This concept is using for automatic robots which should work as a team even without connection.
-    And they should "think" about and predict actions of other objects.
+    This concept is using for automated robots which should work as a team without needing a direct
+    connection, like factory manufacturing robots or Cylons. These robots and AI should be complex
+    enough to "think" about and predict the actions of other objects.
 </p>
 
 <p>
