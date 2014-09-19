@@ -51,7 +51,7 @@ def find_position(yard, symb):
 
 def find_free(yard, position):
     x, y = position
-    result = []
+    result = [("", position)]
     for k, (dx, dy) in DIRS.items():
         nx, ny = x + dx, y + dy
         if 0 <= nx < len(yard) and 0 <= ny < len(yard[0]) and yard[nx][ny] == ".":
