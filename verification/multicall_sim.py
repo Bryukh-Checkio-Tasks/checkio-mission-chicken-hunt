@@ -21,8 +21,8 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         self.runner = data['runner']
         self.start_env()
 
-        for i in range(self.quantity):
-            api.add_process_listener(REQ + str(i), PROCESS_ENDED, self.process_req_ended)
+        # for i in range(self.quantity):
+        api.add_process_listener(REQ + str(0), PROCESS_ENDED, self.process_req_ended)
 
     def start_env(self, data=None):
         if self.run_count >= self.quantity:
@@ -100,3 +100,10 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         self.restarting_env = True
         for i in range(self.quantity):
             api.kill_runner(REQ + str(i))
+
+    def process_req_ended(self, data):
+        if self.restarting_env:
+            self.restarting_env = False
+            self.start_env()
+        else:
+            api.fail(self.current_step, self.get_current_test_fullname())

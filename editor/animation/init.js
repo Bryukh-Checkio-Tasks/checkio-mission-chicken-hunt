@@ -50,7 +50,7 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
                 "...2..",
                 "......"];
             var checkioInputStr = "";
-            for (var h = 1; h < 3; h ++) {
+            for (var h = 1; h < 3; h++) {
                 checkioInputStr += fname + '(' + JSON.stringify(checkioInput[0]);
                 for (var j = 1; j < checkioInput.length; j++) {
                     checkioInputStr += ",<br>     " +
@@ -85,7 +85,7 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
             $content.find('.call').html(checkioInputStr);
             $content.find('.output').html('Working...');
 
-            var svg = new YardSVG($content.find(".explanation")[0]);
+            var svg = new YardSVG($content.find(".explanation svg")[0]);
             svg.draw(checkioInput);
 
             if (data.ext) {
@@ -171,15 +171,18 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
             var attrCell = {"stroke": colorBlue4, "stroke-width": 2, "fill": colorBlue1};
             var attrChicken = {"stroke": colorBlue4, "stroke-width": 2, "fill": colorOrange2};
             var attrHobbit = {"stroke": colorBlue4, "stroke-width": 2, "fill": colorOrange1};
-            var attrNumb = {"stroke": colorBlue4, "fill": colorBlue4, "font-family": "Roboto", "font-weight": "bold", "font-size": cell / 2};
-            var attrObst = {"stroke": colorBlue4, "fill": colorBlue4, "font-family": "Roboto", "font-size": cell * 1.3};
+            var attrNumb = {"stroke": colorBlue4, "fill": colorBlue4,
+                "font-family": "Roboto", "font-weight": "bold",
+                "font-size": cell / 2, "text-anchor": "middle", "alignment-baseline": "central"};
+            var attrObst = {"stroke": colorBlue4, "fill": colorBlue4,
+                "font-family": "Roboto", "font-size": cell * 1.3, "text-anchor": "middle", "alignment-baseline": "central"};
 
 
             var hobbits;
             var chicken;
             var obstacles;
 
-            Raphael.fn.star = function (x, y, outR, inR) {
+            var star = function (x, y, outR, inR) {
                 var path = "M" + x + "," + (y - outR);
 
                 for (var c = 2; c < 11; c += 2) {
@@ -196,57 +199,67 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
 
                 path += "Z";
 
-                return paper.path(path);
+                return path;
             };
 
 
             this.draw = function (data) {
                 sizeX = data[0].length * cell + 2 * p;
                 sizeY = data.length * cell + 2 * p;
-                paper = Raphael(dom, sizeX, sizeY);
+                paper = Snap(dom);
+                paper.attr({"width": sizeX, "height": sizeY});
 
-                obstacles = paper.set();
-                hobbits = paper.set();
-                var grid = paper.set();
+                obstacles = paper.g();
+                hobbits = paper.g();
+                var grid = paper.g();
 
                 for (var row = 0; row < data.length; row++) {
                     for (var col = 0; col < data[row].length; col++) {
-                        grid.push(paper.rect(p + cell * col, p + cell * row, cell, cell).attr(attrCell));
+                        grid.add(paper.rect(p + cell * col, p + cell * row, cell, cell).attr(attrCell));
                         var ch = data[row][col];
                         if (ch == "C") {
-                            chicken = paper.star(
-                                p + cell * (col + 0.5), p + cell * (row + 0.5), cell / 3, cell / 6).attr(attrChicken);
+                            chicken = paper.path(star(
+                                p + cell * (col + 0.5), p + cell * (row + 0.5), cell / 3, cell / 6)).attr(attrChicken);
                             chicken.row = row;
                             chicken.col = col;
                         }
                         if (ch == "1" || ch == "2") {
                             var index = Number(ch) - 1;
-                            hobbits[index] = paper.set();
-                            hobbits[index].push(
+                            hobbits[index] = paper.g();
+                            hobbits[index].add(
                                 paper.circle(
                                     p + cell * (col + 0.5),
                                     p + cell * (row + 0.5),
                                     cell / 3).attr(attrHobbit));
                             hobbits[index].row = row;
                             hobbits[index].col = col;
-                            hobbits[index].push(
+                            hobbits[index].add(
                                 paper.text(p + cell * (col + 0.5),
                                     p + cell * (row + 0.5), ch).attr(attrNumb));
 
                         }
                         if (ch == "X") {
-                            obstacles.push(paper.text(p + cell * (col + 0.5),
+                            obstacles.add(paper.text(p + cell * (col + 0.5),
                                 p + cell * (row + 0.65), "*").attr(attrObst));
                         }
                     }
                 }
 
-                grid.toBack();
-                chicken.toFront();
-                hobbits.toFront();
-                obstacles.toFront();
+                paper.append(grid);
+                paper.append(hobbits[0]);
+                paper.append(hobbits[1]);
+                paper.append(chicken);
+                paper.append(obstacles);
+//                hobbits.after(grid);
+//                chicken.insertAfter(grid);
+//                chicken.after(hobbits);
+//                obstacles.insertAfter(grid);
+//                obstacles.insertAfter(hobbits);
+//                obstacles.after(grid);
+//                obstacles.after(hobbits);
+//                obstacles.toFront();
 
-                paper.rect(p, p, sizeX - 2 * p, sizeY - 2 * p).attr({"stroke": colorBlue4, "stroke-width": 4})
+                paper.rect(p, p, sizeX - 2 * p, sizeY - 2 * p).attr({"stroke": colorBlue4, "stroke-width": 4, "fill-opacity": 0});
 
 
             };
