@@ -20,9 +20,35 @@ if __name__ == "__main__":
     # It's run function in the same environment, but in the grading it will be in various
     from random import choice
     from re import sub
+    from math import hypot
 
     def random_chicken(_, possible):
         return choice(possible)
+
+
+    def distance_chicken(func):
+        def run_chicken(yard, possible):
+            enemies = [find_position(yard, str(i + 1)) for i in range(N)]
+            best = "", find_position(yard, "C")
+            best_dist = 0 if func == max else float("inf")
+            for d, (x, y) in possible:
+                min_dist = min(hypot(x - ex, y - ey) for ex, ey in enemies)
+                if func(min_dist, best_dist) == min_dist:
+                    best = d, (x, y)
+                    best_dist = min_dist
+                elif min_dist == best_dist:
+                    best = choice([(d, (x, y)), best])
+                print(best, best_dist)
+            return best
+    
+        return run_chicken
+    
+    
+    CHICKEN_ALGORITHM = {
+        "random": random_chicken,
+        "run_away": distance_chicken(max),
+        "hunter": distance_chicken(min)
+    }
 
     ERROR_TYPE = "Your function must return a direction as a string."
     ERROR_FENCE = "A hobbit struck in the fence."
@@ -53,7 +79,7 @@ if __name__ == "__main__":
     def prepare_yard(yard, numb):
         return tuple(sub("\d", "S", row.replace(str(numb), "I")) for row in yard)
 
-    def checker(func, yard):
+    def checker(func, yard, chicken_algorithm="random"):
         for _ in range(MAX_STEP):
             individual_yards = [prepare_yard(yard, i + 1) for i in range(N)]
             results = [func(y) for y in individual_yards]
@@ -62,7 +88,7 @@ if __name__ == "__main__":
                 return False
             chicken = find_position(yard, "C")
             possibles = find_free(yard, chicken)
-            chicken_action, new_chicken = choice(possibles)
+            chicken_action, new_chicken = CHICKEN_ALGORITHM[chicken_algorithm](yard, possibles)
             positions = [find_position(yard, str(i + 1)) for i in range(N)]
             new_positions = []
             for i, (x, y) in enumerate(positions):
@@ -96,7 +122,20 @@ if __name__ == "__main__":
                           "...CX.",
                           ".XX.X.",
                           "...2..",
-                          "......")), "Example"
+                          "......"), "random"), "Example 1"
+    assert checker(hunt, ("......",
+                          ".1.XX.",
+                          "...CX.",
+                          ".XX.X.",
+                          "...2..",
+                          "......"), "run_away"), "Example 1"
+    assert checker(hunt, ("......",
+                          ".1.XX.",
+                          "...CX.",
+                          ".XX.X.",
+                          "...2..",
+                          "......"), "hunter"), "Example 1"
+    
     assert checker(hunt, ("1.........",
                           ".X.X.X.X.X",
                           ".X.X.X.X.X",
@@ -107,7 +146,7 @@ if __name__ == "__main__":
                           ".X.X.X.X.X",
                           ".X.X.X.X.X",
                           ".X.X.X.X.X",
-                          ".........2")), "Tunnels"
+                          ".........2"), "run_away"), "Tunnels"
     assert checker(hunt, ("1X.X.X.X2",
                           "X.X.X.X.X",
                           ".X.X.X.X.",
@@ -122,4 +161,4 @@ if __name__ == "__main__":
                           "...C...",
                           ".......",
                           ".......",
-                          "...1...")), "Clear"
+                          "...1...")), "Clear Random"
