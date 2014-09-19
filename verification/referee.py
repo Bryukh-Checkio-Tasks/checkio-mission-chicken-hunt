@@ -1,4 +1,6 @@
 from random import choice
+from math import hypot
+
 from checkio.signals import ON_CONNECT
 from checkio import api
 from checkio.referees.io import CheckiOReferee
@@ -26,8 +28,30 @@ def random_chicken(_, possible):
     return choice(possible)
 
 
+def distance_chicken(func):
+    def run_chicken(yard, possible):
+        enemies = [find_position(yard, str(i + 1)) for i in range(N)]
+        best = "", find_position(yard, "C")
+        best_dist = 0 if func == max else float("inf")
+        for d, (x, y) in possible:
+            min_dist = min(hypot(x - ex, y - ey) for ex, ey in enemies)
+            print("act", d, "ch", (x, y))
+            print("enemies", enemies, min_dist)
+            if func(min_dist, best_dist) == min_dist:
+                best = d, (x, y)
+                best_dist = min_dist
+            elif min_dist == best_dist:
+                best = choice([(d, (x, y)), best])
+            print(best, best_dist)
+        return best
+
+    return run_chicken
+
+
 CHICKEN_ALGORITHM = {
-    "random": random_chicken
+    "random": random_chicken,
+    "run_away": distance_chicken(max),
+    "hunter": distance_chicken(min)
 }
 
 ERROR_TYPE = "Your function must return a direction as a string."
@@ -60,9 +84,11 @@ def find_free(yard, position):
 
 
 def initial(data):
-    yard1 = [row.replace("1", "I").replace("2", "S") for row in data]
-    yard2 = [row.replace("1", "S").replace("2", "I") for row in data]
-    return {"input": data, "input0": yard1, "input1": yard2}
+    yard1 = [row.replace("1", "I").replace("2", "S") for row in data["yard"]]
+    yard2 = [row.replace("1", "S").replace("2", "I") for row in data["yard"]]
+    return {"input": data["yard"], "input0": yard1, "input1": yard2,
+            "chicken_algorithm": data.get("chicken_algorithm", "random")}
+
 
 def process(data):
     yard = data["input"]
@@ -117,8 +143,6 @@ cover3 = """def cover(f, data):
 cover2 = """def cover(f, data):
     return f(tuple(str(row) for row in data))
 """
-
-
 
 api.add_listener(
     ON_CONNECT,
