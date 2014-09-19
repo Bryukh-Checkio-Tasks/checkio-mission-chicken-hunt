@@ -25,15 +25,20 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
             api.add_process_listener(REQ + str(i), PROCESS_ENDED, self.process_req_ended)
 
     def start_env(self, data=None):
-        if self.run_count >= self.quantity:
+        print("start_env")
+        print(data)
+        print(self.run_count)
+        req_name = REQ + str(self.run_count)
+        if self.run_count >= self.quantity - 1:
             callback = self.run_success
             self.run_count = 0
         else:
             self.run_count += 1
             callback = self.start_env
+        print("callback", callback, req_name)
         api.start_runner(code=self.code,
                          runner=self.runner,
-                         prefix=REQ + str(self.run_count),
+                         prefix=req_name,
                          controller_type=SIMPLE,
                          callback=callback,
                          errback=self.fail_cur_step,
@@ -53,6 +58,7 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
 
     def test_current_step(self, data=None):
         input_name = "input" + str(self.run_count)
+        req_name = REQ + str(self.run_count)
         if self.run_count:
 
             self.referee_data["recent_results"].append(data["result"])
@@ -72,7 +78,7 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
                              callback=callback,
                              errback=self.fail_cur_step,
                              func=self.function_name,
-                             prefix=REQ + str(self.run_count))
+                             prefix=req_name)
 
     def check_current_test(self, data):
 
@@ -98,17 +104,19 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
 
     def restart_env(self):
         self.restarting_env = True
-        for i in range(self.quantity):
-            api.kill_runner(REQ + str(i))
+        api.kill_runner(REQ + str(self.run_count))
 
     def process_req_ended(self, data):
-        # print("-------------")
-        # print(data)
-        # print(self.restarting_env)
-        if data["prefix"] != "req0":
-            pass
-        elif self.restarting_env:
-            self.restarting_env = False
-            self.start_env()
+        print("------")
+        print(self.run_count)
+        self.run_count += 1
+        if self.run_count < self.quantity:
+            api.kill_runner(REQ + str(self.run_count))
         else:
-            api.fail(self.current_step, self.get_current_test_fullname())
+            self.run_count = 0
+
+            if self.restarting_env:
+                self.restarting_env = False
+                self.start_env()
+            else:
+                api.fail(self.current_step, self.get_current_test_fullname())

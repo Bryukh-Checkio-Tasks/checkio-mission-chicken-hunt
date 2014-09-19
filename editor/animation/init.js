@@ -52,12 +52,12 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
             console.log(data.in);
             var checkioInputStr = "";
             for (var h = 1; h < 3; h++) {
-                checkioInputStr += fname + '(' + JSON.stringify(checkioInput[0]).replace(String(h), "I").replace(String(3 - h));
+                checkioInputStr += fname + '((' + JSON.stringify(checkioInput[0]).replace(String(h), "I").replace(String(3 - h), "S");
                 for (var j = 1; j < checkioInput.length; j++) {
-                    checkioInputStr += ",<br>     " +
+                    checkioInputStr += ",<br>      " +
                         JSON.stringify(checkioInput[j]).replace(String(h), "I").replace(String(3 - h), "S");
                 }
-                checkioInputStr += ")<br>";
+                checkioInputStr += "))<br>";
 
 
             }

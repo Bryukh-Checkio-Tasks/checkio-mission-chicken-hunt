@@ -56,7 +56,7 @@ def find_free(yard, position):
     result = []
     for k, (dx, dy) in DIRS.items():
         nx, ny = x + dx, y + dy
-        if 0 <= nx < len(yard[0]) and 0 <= ny < len(yard) and yard[nx][ny] == ".":
+        if 0 <= nx < len(yard) and 0 <= ny < len(yard[0]) and yard[nx][ny] == ".":
             result.append((k, (nx, ny)))
     return result
 
@@ -81,7 +81,7 @@ def process(data):
     new_positions = []
     for i, (x, y) in enumerate(positions):
         nx, ny = x + DIRS[results[i]][0], y + DIRS[results[i]][1]
-        if nx < 0 or nx >= len(yard[0]) or ny < 0 or ny >= len(yard):
+        if nx < 0 or nx >= len(yard) or ny < 0 or ny >= len(yard[0]):
             data.update({"result": False, "is_win": False, "message": ERROR_FENCE})
             return data
         if yard[nx][ny] == "X":
