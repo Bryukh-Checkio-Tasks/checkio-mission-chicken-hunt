@@ -102,7 +102,6 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
             api.kill_runner(REQ + str(i))
 
     def process_req_ended(self, data):
-        print("sdasdasdasdsadsadasdas", data)
         if self.restarting_env:
             self.restarting_env = False
             self.start_env()
