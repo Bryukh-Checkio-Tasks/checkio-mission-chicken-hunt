@@ -42,8 +42,6 @@ MAX_STEP = 100
 
 
 def find_position(yard, symb):
-    # ipdb.set_trace()
-
     for i, row in enumerate(yard):
         for j, ch in enumerate(row):
             if ch == symb:
