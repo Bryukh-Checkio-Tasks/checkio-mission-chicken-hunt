@@ -119,5 +119,7 @@ hunt(("......",
 </p>
 
 <p>
-    <strong>Precondition:</strong>
+    <strong>Precondition:</strong><br>
+    3 &lt; len(yard) &le; 10<br>
+    all(3 &lt; len(row) &le; 10 and len(row) == len(yard[0]) for row in yard)
 </p>
