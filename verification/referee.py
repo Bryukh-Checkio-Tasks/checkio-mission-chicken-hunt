@@ -35,14 +35,11 @@ def distance_chicken(func):
         best_dist = 0 if func == max else float("inf")
         for d, (x, y) in possible:
             min_dist = min(hypot(x - ex, y - ey) for ex, ey in enemies)
-            print("act", d, "ch", (x, y))
-            print("enemies", enemies, min_dist)
             if func(min_dist, best_dist) == min_dist:
                 best = d, (x, y)
                 best_dist = min_dist
             elif min_dist == best_dist:
                 best = choice([(d, (x, y)), best])
-            print(best, best_dist)
         return best
 
     return run_chicken

@@ -25,9 +25,6 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
             api.add_process_listener(REQ + str(i), PROCESS_ENDED, self.process_req_ended)
 
     def start_env(self, data=None):
-        print("start_env")
-        print(data)
-        print(self.run_count)
         req_name = REQ + str(self.run_count)
         if self.run_count >= self.quantity - 1:
             callback = self.run_success
@@ -35,7 +32,6 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         else:
             self.run_count += 1
             callback = self.start_env
-        print("callback", callback, req_name)
         api.start_runner(code=self.code,
                          runner=self.runner,
                          prefix=req_name,
@@ -107,8 +103,6 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
         api.kill_runner(REQ + str(self.run_count))
 
     def process_req_ended(self, data):
-        print("------")
-        print(self.run_count)
         self.run_count += 1
         if self.run_count < self.quantity:
             api.kill_runner(REQ + str(self.run_count))
