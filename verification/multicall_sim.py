@@ -102,9 +102,9 @@ class CheckioRefereeMultiSeveral(CheckiORefereeMulti):
             api.kill_runner(REQ + str(i))
 
     def process_req_ended(self, data):
-        print("-------------")
-        print(data)
-        print(self.restarting_env)
+        # print("-------------")
+        # print(data)
+        # print(self.restarting_env)
         if data["prefix"] != "req0":
             pass
         elif self.restarting_env:
