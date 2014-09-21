@@ -7,6 +7,8 @@ Each test is dict with
     "explanation" -- not necessary key, it's using for additional info in animation.
 """
 
+from random import choice
+
 TESTS = {
     "00. Example Random": {
         "yard": ["......",
@@ -149,7 +151,7 @@ TESTS = {
             ".X2X.",
             ".XXX.",
         ], },
-    "8. Maze": {
+    "80. Maze": {
         "yard": [
             "..........",
             ".XXXXXXXX.",
@@ -161,7 +163,21 @@ TESTS = {
             ".X.XX...X.",
             ".XXCXXXXX.",
             "..........",
-        ], "chicken_algorithm": "run_away"},
+        ], "chicken_algorithm": choice(["random", "run_away", "hunter"])},
+    "81. Maze": {
+        "yard": [
+            "..........",
+            ".XXXXXXXX.",
+            ".X.X....2.",
+            ".X...XXXX.",
+            ".X.X.X.1X.",
+            ".X.X.X..X.",
+            ".X.X.XX.X.",
+            ".X.XX...X.",
+            ".XXCXXXXX.",
+            "..........",
+        ], "chicken_algorithm": choice(["random", "run_away", "hunter"])},
+
     "9. Hangover": {
         "yard": [
             "....C....",
