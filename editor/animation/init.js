@@ -174,7 +174,8 @@ requirejs(['ext_editor_1', 'jquery_190', 'raphael_212', 'snap.svg_030'],
             var attrHobbit = {"stroke": colorBlue4, "stroke-width": 2, "fill": colorOrange1};
             var attrNumb = {"stroke": colorBlue4, "fill": colorBlue4,
                 "font-family": "Roboto", "font-weight": "bold",
-                "font-size": cell / 2, "text-anchor": "middle", "alignment-baseline": "central"};
+                "font-size": cell / 2, "text-anchor": "middle",
+                "alignment-baseline": "central", "dominant-baseline": "central"};
             var attrObst = {"stroke": colorBlue4, "fill": colorBlue4,
                 "font-family": "Roboto", "font-size": cell * 1.3, "text-anchor": "middle",
                 "alignment-baseline": "central", "dominant-baseline": "central"};
