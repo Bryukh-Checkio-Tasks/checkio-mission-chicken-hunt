@@ -25,7 +25,6 @@ if __name__ == "__main__":
     def random_chicken(_, possible):
         return choice(possible)
 
-
     def distance_chicken(func):
         def run_chicken(yard, possible):
             enemies = [find_position(yard, str(i + 1)) for i in range(N)]
@@ -40,10 +39,9 @@ if __name__ == "__main__":
                     best = choice([(d, (x, y)), best])
                 print(best, best_dist)
             return best
-    
+
         return run_chicken
-    
-    
+
     CHICKEN_ALGORITHM = {
         "random": random_chicken,
         "run_away": distance_chicken(max),
@@ -69,7 +67,7 @@ if __name__ == "__main__":
 
     def find_free(yard, position):
         x, y = position
-        result = []
+        result = [("", position)]
         for k, (dx, dy) in DIRS.items():
             nx, ny = x + dx, y + dy
             if 0 <= nx < len(yard) and 0 <= ny < len(yard[0]) and yard[nx][ny] == ".":
@@ -135,7 +133,7 @@ if __name__ == "__main__":
                           ".XX.X.",
                           "...2..",
                           "......"), "hunter"), "Example 1"
-    
+
     assert checker(hunt, ("1.........",
                           ".X.X.X.X.X",
                           ".X.X.X.X.X",
