@@ -1,0 +1,135 @@
+<div class="story">
+    <p>
+        "Es en verdad evidente que a pesar de un alejamiento posterior, los hobbits
+        son parientes nuestros: est&aacute;n m&aacute;s cerca de nosotros que de los elfos y a&uacute;n que
+        los mismos Enanos. Antiguamente hablaban las lenguas de los hombres, adaptadas
+        a su propia modalidad, y ten&iacute;an casi las mismas preferencias y aversiones
+        que los hombres. Mas ahora es imposible descubrir en qu&eacute; consiste nuestra
+        relaci&oacute;n con ellos".
+    </p>
+
+    <p>
+        "Los hobbits son un pueblo sencillo y muy antiguo, m&aacute;s numeroso en tiempos
+        remotos que en la actualidad. Amaban la paz, la tranquilidad y el cultivo de
+        la buena tierra, y no hab&iacute;a para ellos paraje mejor que un campo bien aprovechado
+        y bien ordenado".
+    </p>
+    -- "El Se&ntilde;or de los Anillos" J.R.R.Tolkien
+</div>
+
+<p>
+    Dos hobbits est&aacute;n tratando de atrapar una gallina en el patio. Esto deber&iacute;a ser una
+    tarea f&aacute;cil, pero estos dos vecinos nunca se han llevado bien, y aunque la gallina
+    anda suelta y necesitan atraparla, ellos se reh&uacute;san a hablarse entre s&iacute;.  Por esta
+    raz&oacute;n, tendremos que encontrar un algoritmo que funcione para los dos hobbits de
+    forma independiente, de manera que cualquiera de ellos para atrapar la gallina
+    sin tropezarse con una cerca, con un &aacute;rbol o entre s&iacute;.  Una &uacute;ltima cosa, los hobbits
+    no puede correr o esperar por siempre. Despu&eacute;s de todo, atrapar una gallina es
+    importante, pero ante todo deben adherirse a su estricto horario de comidas.
+</p>
+
+<p>
+    Se te dar&aacute; un mapa del jard&iacute;n como una secuencia de cadenas (<em>string</em>)donde::<br>
+    - "." es una celda vac&iacute;a;<br>
+    - "I" es uno de los Hobbit;<br>
+    - "S" es el compa&ntilde;ero;<br>
+    - "C" es la gallina (nuestro objetivo);<br>
+    - "X" es un obst&aacute;culo (un &aacute;rbol, una roca, etc.)<br>
+    <br>
+    El patio est&aacute; rodeado por una cerca.
+</p>
+<p>
+    La gallina y los Hobbits pueden moverse en 8 direcciones hacia las celdas vecinas
+    (incluyendo diagonales), o pueden esperar y permanecer en el mismo lugar por un
+    tiempo. Las acciones que pueden ejecutarse desde cada celda se describen a
+    continuaci&oacute;n:<br>
+    - "N" norte, "S" sur, "W" oeste, "E" este;<br>
+    - "NW" noroeste, "NE" noreste, "SW" suroeste, "SE" sureste;<br>
+    - "" (<em>empty string</em>) es esperar.
+</p>
+
+<p>
+    La gallina es impredecible y puede utilizar diversas t&aacute;cticas (incluyendo el movimiento
+    aleatorio), pero no puede salir del patio. Los hobbits no pueden atravesar obst&aacute;culos o
+    cercas, y no deben encontrarse entre s&iacute;, incluso justo antes de atrapar a la gallina.
+</p>
+
+<p>
+    Ahora viene la parte dif&iacute;cil. Tu funci&oacute;n deber&aacute; ser utilizada dos veces en cada paso
+    - una vez para el primer Hobbit y una vez para el segundo. Los Hobbits no pueden
+    comunicarse entre s&iacute; y hacen sus movimientos de forma simult&aacute;nea, as&iacute; que debes tener
+    cuidado de no mover los dos Hobbits hacia una misma casilla.
+</p>
+
+<p>
+  Para ganar puedes trasladar cualquier Hobbit a la celda en la que se encuentra la gallina,
+  pero recuerda que s&oacute;lo uno debe hacer el movimiento final, ya que si entran a la misma celda
+  simult&aacute;neamente, se considera como un choque (y no est&aacute; permitido). Los hobbits y
+  la gallina se mueven al mismo tiempo, as&iacute; que ten en cuenta que si acabas de llegar a la celda
+   donde estaba la gallina, no hay garant&iacute;a que puedas atraparla. Dado que la hora de comer
+   se acerca, solo tienes 100 movimientos para atraparla.
+</p>
+
+<p>
+    Esta es una misi&oacute;n "multi-llamada" y tu funci&oacute;n ser&aacute; invocada hasta que ganes o pierdas.
+    Cada ciclo de pasos se ejecuta en un nuevo entorno, por lo que puede utilizar variables
+    globales entre cada paso. Sin embargo, una vez se empieza una nueva “cacer&iacute;a” todas las variables
+    ser&aacute;n reseteadas.
+</p>
+
+<div>
+    <img title="example" src="{{MEDIA}}map.svg" alt="map" style="float: left"/>
+
+    <p>Este mapa se ver&aacute; un poco distinto despu&eacute;s de cada llamada a la funci&oacute;n:</p>
+    <pre>
+ First       Second
+"......",   "......",
+".I.XX.",   ".S.XX.",
+"...CX.",   "...CX.",
+".XX.X.",   ".XX.X.",
+"...S..",   "...I..",
+"......",   "......",
+
+    </pre>
+    <p style="clear: both"></p>
+</div>
+
+<p>
+    <strong>Datos de Entrada: </strong>El mapa del patio como una tupla de cadenas (<em>string</em>).
+    Tu funci&oacute;n ser&aacute; llamada dos veces por cada paso.
+</p>
+
+<p>
+    <strong>Salida: </strong> La acci&oacute;n a seguir como una cadena (<em>string</em>). La acci&oacute;n
+    debe ser una de las siguientes: "N", "S", "W", "E", "NW", "NE", "SW",
+    "SE", "S".
+</p>
+
+
+<div class="for_info_only">
+    <p>
+        <strong>Ejemplo:</strong>
+    </p>
+    <pre class="brush: python">
+hunt(("......",
+      ".I.XX.",
+      "...CX.",
+      ".XX.X.",
+      "...S..",
+      "......")) # return an action
+    </pre>
+</div>
+
+<p class="for_info_only">
+    <strong>&iquest;C&oacute;mo se usa?:</strong>
+    Este concepto es utilizado en robots automatizados que trabajan en equipo sin
+    que implique una conexi&oacute;n directa entre ellos, como robots de fabricaci&oacute;n o Cylons.
+    Dichos robots deben implementar una AI lo suficientemente compleja que les permita "pensar"
+    y predecir las acciones de otros objetos.
+</p>
+
+<p>
+    <strong>Condiciones:</strong><br>
+    3 &lt; len(yard) &le; 10<br>
+    all(3 &lt; len(row) &le; 10 and len(row) == len(yard[0]) for row in yard)
+</p>
